@@ -5,10 +5,11 @@ import {
     Box,
     Dialog,
     DialogTitle,
-    DialogContent,
+    DialogContent
 } from "@material-ui/core";
 import Game from "./Game";
 import ResultTable from "./ResultTable";
+
 
 export default class MainContent extends React.Component {
     constructor() {
@@ -54,28 +55,51 @@ export default class MainContent extends React.Component {
     };
 
     getRandomNumber = (slot) => {
-        let randomNumber = Math.floor(1 + Math.random() * (9 + 1 - 1));
-        this.setState(prevState => ({
-            gameResults: {
-                ...prevState.gameResults,
-                [slot]: randomNumber
-            }
-        }), () => {
-           setTimeout(() => this.checkCombination(slot), 1000)
-            }
-        );
+        if (slot === "slot_1") {
+            this.setState({
+                gameResults: {
+                    slot_1: Math.floor(1 + Math.random() * (9 + 1 - 1)),
+                    slot_2: Math.floor(1 + Math.random() * (9 + 1 - 1)),
+                    slot_3: Math.floor(1 + Math.random() * (9 + 1 - 1))
+                }
+            }, () => {
+                this.checkCombination();
+                this.props.checkWinningCombinations(this.state.gameResults)
+            });
+
+        }
+        if (slot === "slot_2") {
+            this.setState({
+                gameResults: {
+                    slot_1: 7,
+                    slot_2: 7,
+                    slot_3: 7
+                }
+            }, () => {
+                this.checkCombination();
+                this.props.checkWinningCombinations(this.state.gameResults)
+            });
+
+        }
+        if (slot === "slot_3") {
+            this.handleClose();
+        }
+
     };
 
-    checkCombination = (str) => {
-        if (str === "slot_3") {
-            this.setState({
-                tableData: [...this.state.tableData, {id: new Date().getTime(),...this.state.gameResults, time: this.getTimeOfTry()}],
-            }, () => {
-                localStorage.setItem("tableOfResults", JSON.stringify(this.state.tableData))
-            });
-            this.handleClose();
-            this.props.checkWinningCombinations(this.state.gameResults)
-        }
+    checkCombination = () => {
+        this.setState(prevState => ({
+            tableData: [
+                ...prevState.tableData,
+                {
+                    id: new Date().getTime(),
+                    ...this.state.gameResults,
+                    time: this.getTimeOfTry()
+                }
+            ]
+        }), () => {
+            localStorage.setItem("tableOfResults", JSON.stringify(this.state.tableData))
+        });
     };
     render() {
 
@@ -84,30 +108,30 @@ export default class MainContent extends React.Component {
                 <Container fixed style={{
                     marginTop: "80px",
                 }}>
-                    <Box display="flex" justifyContent="center" m={1} p={1} bgcolor="background.paper">
+                    <Box display="flex" justifyContent="center" m={1} p={1} bgcolor="background.paper" >
                         <Box p={1}>
                             <Button variant="contained"
                                     color="primary"
                                     disabled={this.props.balance < 1}
                                     onClick={this.handleOpen}
                             >Play the game</Button>
-
                             <Dialog open={this.state.showModal}
                                     onClose={this.handleClose}
                                     aria-labelledby="form-dialog-title"
+                                    maxWidth="xl"
                             >
                                 <DialogTitle id="form-dialog-title">
                                     Good Luck!
                                 </DialogTitle>
-                                <DialogContent>
+                                <DialogContent style={{display: "flex"}}>
                                     <Game
                                         getRandomNumber={this.getRandomNumber}
                                         gameResults={this.state.gameResults}
+                                        changeBalance={this.props.changeBalance}
                                     />
                                 </DialogContent>
                             </Dialog>
-
-                        </Box>
+              </Box>
                     </Box>
                     <ResultTable tableData={this.state.tableData}/>
                 </Container>

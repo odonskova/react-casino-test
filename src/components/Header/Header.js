@@ -7,7 +7,7 @@ import User from "./User/User";
 
 const useStyles = makeStyles((theme) => ({
     logo: {
-        marginRight: theme.spacing(1)
+        marginRight: theme.spacing(1),
     },
     title: {
         flexGrow: 1

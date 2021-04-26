@@ -47,12 +47,8 @@ export default class App extends React.Component {
   checkWinningCombinations = (gameResults) => {
     let arrOfValues = Object.values(gameResults);
     let sortedArr = arrOfValues.sort((a, b) => a - b);
-    if (sortedArr[0] === sortedArr[1] || sortedArr[1] === sortedArr[2] ) {
-      this.setState(prevState => ({
-        balance: prevState.balance + 0.5
-      }))
-    }
-    if (sortedArr[0] === sortedArr[1] === sortedArr[2] ) {
+
+    if (sortedArr[0] === sortedArr[1] && sortedArr[1] === sortedArr[2]) {
       if (sortedArr[0] === 7) {
         this.setState(prevState => ({
           balance: prevState.balance + 10
@@ -62,6 +58,11 @@ export default class App extends React.Component {
           balance: prevState.balance + 5
         }))
       }
+    }
+    if (sortedArr[0] === sortedArr[1] || sortedArr[1] === sortedArr[2]) {
+      this.setState(prevState => ({
+        balance: prevState.balance + 0.5
+      }))
     }
     localStorage.setItem("balance", this.state.balance);
   };

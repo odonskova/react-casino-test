@@ -9,7 +9,8 @@ import Typography from '@material-ui/core/Typography';
 const useStyles = makeStyles({
     root: {
         minWidth: 275,
-        minHeight: 100
+        minHeight: 100,
+        marginRight: 10
     },
     title: {
         fontSize: 14,
@@ -20,7 +21,7 @@ const useStyles = makeStyles({
     }
 });
 
-export default function Game({getRandomNumber, gameResults}) {
+export default function Game({changeBalance, getRandomNumber, gameResults}) {
     const classes = useStyles();
     return (
         <>
@@ -41,9 +42,11 @@ export default function Game({getRandomNumber, gameResults}) {
                         </Card>
                         <CardActions>
                             <Button variant="contained"
-                                    disabled={Boolean(gameResults[item])}
-                                    onClick={() => getRandomNumber(item)}
-                            >Play</Button>
+                                    onClick={() =>{
+                                        getRandomNumber(item);
+                                        changeBalance();
+                                    }}
+                                    >Play</Button>
                         </CardActions>
                     </div>
                 )
